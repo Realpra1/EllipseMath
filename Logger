@@ -1,0 +1,91 @@
+package EllipseMath;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+public class Logger {
+	public enum LogType{
+		Debug,
+		Info,
+		Warning,
+		Error
+	}
+	
+	public static final boolean debug = true;
+	
+	@SuppressWarnings("unused")
+	public static void log(String message, Exception ex, LogType level){
+		if(level == LogType.Debug && !debug)
+			return;
+		
+		if((message == null || message.length() == 0) && ex == null)
+			return;
+		
+		String logString = "UTCTIME: "+GetUTCString()+" -- " + level.toString() + " -- " + message;
+		if(ex == null && level != LogType.Info)
+			logString = logString + " -- No exception data";
+		else if (ex != null)
+		{
+			StringWriter sWriter = new StringWriter();
+			PrintWriter writer = new PrintWriter(sWriter);
+			ex.printStackTrace(writer);
+			writer.flush();
+			
+			logString = logString + " -- Exception: " + ex.getMessage() + " Stacktrace:\n" + sWriter.toString();
+		}
+		
+		log(logString+"\n");
+	}
+	
+	private static void log(String s){
+		if(s == null || s.length() == 0)
+			return;
+		
+		System.out.print(s);
+		System.out.flush();
+	}
+	
+	public static void log(String message, LogType level){
+		log(message, null,level);
+	}
+	
+	public static void info(String message, Exception ex){
+		log(message, ex, LogType.Info);
+	}
+	public static void info(String message){
+		log(message, null, LogType.Info);
+	}
+	
+	public static void warning(String message, Exception ex){
+		log(message, ex, LogType.Warning);
+	}
+	public static void warning(String message){
+		log(message, null, LogType.Warning);
+	}
+	
+	public static void debug(String message, Exception ex){
+		log(message, ex, LogType.Debug);
+	}
+	public static void debug(String message){
+		log(message, null, LogType.Debug);
+	}
+	
+	public static void error(String message, Exception ex){
+		log(message, ex, LogType.Error);
+	}
+	public static void error(String message){
+		log(message, null, LogType.Error);
+	}
+	
+	public static String GetUTCString(){
+		Date date = new Date();
+		String ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+		SimpleDateFormat sdf = new SimpleDateFormat(ISO_FORMAT);
+		TimeZone utc = TimeZone.getTimeZone("UTC");
+		sdf.setTimeZone(utc);
+		return sdf.format(date);
+	}
+}
