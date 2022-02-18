@@ -1,7 +1,6 @@
-package EllipseMath.projectionMath;
+package Ellipse.projectionMath;
 
 import EllipseMath.Logger;
-import EllipseMath.MathFunctions;
 import EllipseMath.Point;
 
 public class CircleSegment {
@@ -60,7 +59,7 @@ public class CircleSegment {
 		//2. Find height.
 		Point[] trianglePoints = new Point[]{new Point(xC,yC), new Point(threePoints[1][0], threePoints[1][1]), new Point(threePoints[2][0], threePoints[2][1])};
 		double h = findHeight(trianglePoints, 2);
-		double hyp = MathFunctions.pointDistance(trianglePoints[0], trianglePoints[2]);
+		double hyp = pointDistance(trianglePoints[0], trianglePoints[2]);
 		//3. Height and a side length will allow using asin function.
 		double segmentAngle = Math.toDegrees(Math.asin(h/hyp));
 		//4. Angle/360*circumference = length.
@@ -73,9 +72,9 @@ public class CircleSegment {
 		//A = a*h/2
 		//a*h/2=sqrt[s*(s-a)*(sb)*(s-c)]
 		//h=2*sqrt[s*(s-a)*(sb)*(s-c)]/a
-		double a = MathFunctions.pointDistance(points[(heightPointIndex+2)%3], points[(heightPointIndex+1)%3]);
-		double b = MathFunctions.pointDistance(points[heightPointIndex], points[(heightPointIndex+1)%3]);
-		double c = MathFunctions.pointDistance(points[(heightPointIndex+2)%3], points[heightPointIndex]);
+		double a = pointDistance(points[(heightPointIndex+2)%3], points[(heightPointIndex+1)%3]);
+		double b = pointDistance(points[heightPointIndex], points[(heightPointIndex+1)%3]);
+		double c = pointDistance(points[(heightPointIndex+2)%3], points[heightPointIndex]);
 		double s = (a+b+c)/2;
 		
 		return 2*Math.sqrt(s*(s-a)*(s-b)*(s-c))/a;
@@ -112,6 +111,13 @@ public class CircleSegment {
 		denominator = 2*(y2-y1)*(x2-x3)/(x1-x2)+2*(y2-y3);
 		
 		return nominator / denominator;
+	}
+	
+	public static double pointDistance(Point a, Point b){
+		double dx = Math.abs(a.x-b.x);
+		double dy = Math.abs(a.y-b.y);
+		
+		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy,  2));
 	}
 }
 
